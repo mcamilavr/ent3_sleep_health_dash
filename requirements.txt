@@ -1,0 +1,13 @@
+pandas
+numpy
+matplotlib
+seaborn
+scipy
+plotly
+dash
+dash-bootstrap-components
+scikit-learn
+imblearn
+joblib
+psycopg2-binary
+sqlalchemy
