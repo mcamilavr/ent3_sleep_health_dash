@@ -1019,6 +1019,20 @@ resultados_subtabs = dcc.Tabs([
                     yaxis={'categoryorder': 'total ascending'}
                 )
             ),
+            
+            html.Div([
+                html.H5("Factores Predictivos de Trastornos del Sueño", className="mt-4 mb-3"),
+                html.P("La importancia de características revela que los principales factores predictivos son:"),
+                html.Ul([
+                    html.Li([html.B("BMI_Category_Overweight"), ": El sobrepeso aparece como el factor más importante (0.21)"]),
+                    html.Li([html.B("Physical_Activity_Level"), ": El nivel de actividad física es el segundo factor (0.17)"]),
+                    html.Li([html.B("Age"), ": La edad es el tercer factor más importante (0.14)"]),
+                    html.Li([html.B("Sleep_Duration"), ": La duración del sueño (0.12)"]),
+                    html.Li([html.B("Daily_Steps"), ": Los pasos diarios (0.11)"])
+                ]),
+                html.P("Esto sugiere que el manejo del peso y el nivel de actividad física son cruciales para prevenir trastornos del sueño.")
+            ], className="mt-4 mb-4 p-3", style={'backgroundColor': '#f8f9fa', 'borderRadius': '5px', 'border': '1px solid #e9ecef'}),
+            
             html.Hr(),
             html.H5("Matriz de Confusión", className="mt-4 mb-3"),
             dcc.Graph(
@@ -1036,7 +1050,110 @@ resultados_subtabs = dcc.Tabs([
                     plot_bgcolor=colors['background'],
                     paper_bgcolor=colors['background']
                 )
-            )
+            ),
+            
+            html.Div([
+                html.H5("Evaluación del Modelo: Random Forest", className="mt-4 mb-3"),
+                html.P("El modelo de Random Forest fue evaluado usando múltiples métricas con enfoque en problemas multiclase y desbalanceados. Se obtuvo el siguiente desempeño:"),
+                html.Ul([
+                    html.Li([html.B("Recall ponderado (0.9255): "), "esta métrica fue priorizada dado que nos interesa minimizar los falsos negativos en cada categoría, especialmente para no omitir pacientes con trastornos como Insomnio o Apnea del Sueño."]),
+                    html.Li([html.B("Balanced Accuracy (0.9240): "), "útil en contextos de desbalance, ya que promedia el recall por clase, compensando la predominancia de la clase 'None'."]),
+                    html.Li([html.B("F1 Macro (0.9069): "), "ofrece una medida equilibrada entre precisión y recall para cada clase, permitiendo comparar el rendimiento global."])
+                ]),
+                html.H6("Informe de Clasificación:", className="mt-3 mb-2"),
+                html.Ul([
+                    html.Li([html.B("Insomnia: "), "Recall de 0.89 y F1-score de 0.89 → el modelo tiene buen desempeño identificando correctamente esta clase."]),
+                    html.Li([html.B("None: "), "Recall de 0.93 → identifica muy bien a los pacientes sin trastornos, aunque hubo 4 falsos positivos (3 Sleep Apnea, 1 Insomnia)."]),
+                    html.Li([html.B("Sleep Apnea: "), "Recall de 0.95, aunque con menor precisión (0.79), indicando que algunos pacientes fueron mal clasificados como apnea."])
+                ]),
+                html.H6("Conclusión:", className="mt-3 mb-2"),
+                html.P("El modelo logra una excelente capacidad de generalización, como lo demuestran las métricas similares entre entrenamiento y prueba. Dado el enfoque clínico del problema, se priorizó el recall ponderado para evitar falsos negativos, y el modelo respondió adecuadamente a esta necesidad. La matriz de confusión refuerza esto, mostrando pocos errores graves de clasificación. El recall ponderado alto es fundamental para un problema sensible como este, en el que dejar pasar un trastorno sin detectar puede tener consecuencias clínicas relevantes.")
+            ], className="mt-4 mb-4 p-3", style={'backgroundColor': '#f8f9fa', 'borderRadius': '5px', 'border': '1px solid #e9ecef'}),
+            
+            html.Hr(),
+            html.H5("Comparación de Desempeño para Evaluar Overfitting", className="mt-4 mb-3"),
+            html.Div([
+                dcc.Markdown('''
+    
+                ''', className="mb-3"),
+                
+                html.Div([
+                    html.H6("Evaluación de Overfitting", className="mt-3 mb-2"),
+                    html.P("Se compararon las métricas de desempeño entre el conjunto de entrenamiento y el conjunto de prueba para detectar posibles signos de sobreajuste (overfitting)."),
+                    html.P("Los resultados fueron los siguientes:"),
+                    html.Ul([
+                        html.Li([html.B("Recall ponderado (Train): "), "0.9179"]),
+                        html.Li([html.B("Recall ponderado (Test): "), "0.9255"]),
+                        html.Li([html.B("F1 ponderado (Train): "), "0.9173"]),
+                        html.Li([html.B("F1 ponderado (Test): "), "0.9276"])
+                    ]),
+                    html.P([
+                        "Dado que los valores en ambos conjuntos son ", 
+                        html.B("muy similares"), 
+                        " e incluso ligeramente superiores en el conjunto de prueba, se concluye que el modelo ",
+                        html.B("no presenta overfitting"), "."
+                    ]),
+                    html.P([
+                        "Esto indica una ",
+                        html.B("buena capacidad de generalización"),
+                        ", lo cual es crucial al aplicar el modelo a nuevos datos."
+                    ])
+                ], className="mt-3 p-3", style={'backgroundColor': '#e8f4f8', 'borderRadius': '5px', 'border': '1px solid #bde0ec'})
+            ], className="mt-4 mb-4"),
+            
+            html.Hr(),
+            html.H5("Identificación de Predicciones Incorrectas", className="mt-4 mb-3"),
+            html.Div([
+                dcc.Markdown('''
+    
+                ''', className="mb-3"),
+                
+                # Gráfico PCA (imagen cargada desde assets)
+                html.Div([
+                    html.Img(src="assets/PCA.png", alt="Visualización PCA de predicciones", 
+                            style={'maxWidth': '100%', 'border': '1px solid #ddd', 'borderRadius': '5px'}),
+                    html.Figcaption("Visualización de predicciones en espacio PCA", 
+                                style={'textAlign': 'center', 'fontStyle': 'italic', 'marginTop': '10px'})
+                ], className="text-center mb-4"),
+                
+                html.Div([
+                    html.H6("Interpretación del Análisis PCA", className="mt-3 mb-2"),
+                    html.P("La proyección del conjunto de prueba sobre los dos primeros componentes principales (PCA) permite visualizar la distribución de las observaciones en un espacio reducido de 2 dimensiones, facilitando la evaluación visual del comportamiento del modelo."),
+                    html.P("En el gráfico:"),
+                    html.Ul([
+                        html.Li("Cada punto representa una instancia del conjunto de prueba."),
+                        html.Li([
+                            "El ", 
+                            html.B("color"), 
+                            " indica la clase ", 
+                            html.B("predicha"), 
+                            " por el modelo (", 
+                            html.Code("None"), 
+                            ", ", 
+                            html.Code("Insomnia"), 
+                            ", ", 
+                            html.Code("Sleep Apnea"), 
+                            ")."
+                        ]),
+                        html.Li([
+                            "La ", 
+                            html.B("forma"), 
+                            " del punto distingue si la predicción fue correcta (✔️) o incorrecta (✖️)."
+                        ])
+                    ]),
+                    html.H6("Interpretación:", className="mt-3 mb-2"),
+                    html.Ul([
+                        html.Li([
+                            "Se observan ", 
+                            html.B("grupos bien definidos"), 
+                            " en el espacio PCA, lo cual indica que el modelo logró capturar estructuras discriminativas entre clases."
+                        ]),
+                        html.Li("La mayoría de los puntos están correctamente clasificados (predicción = real), lo que concuerda con el bajo porcentaje de errores observado (solo 7.4% de predicciones incorrectas)."),
+                        html.Li("Las pocas instancias mal clasificadas aparecen aisladas o en zonas de frontera entre clases, lo cual es esperable en problemas multiclase con cierto traslape.")
+                    ]),
+                    html.P("Esta visualización complementa las métricas cuantitativas al permitir validar gráficamente la capacidad de generalización del modelo y detectar regiones donde podría haber ambigüedad entre clases.")
+                ], className="mt-3 p-3", style={'backgroundColor': '#eef7ee', 'borderRadius': '5px', 'border': '1px solid #c3e6cb'})
+            ], className="mt-4 mb-4")
         ])
     ]),
     dcc.Tab(label='d. Indicadores del Modelo', children=[
@@ -1167,6 +1284,7 @@ resultados_tab = dcc.Tab(
         ], fluid=True)
     ]
 )
+
 
 # 8. Conclusiones
 conclusiones_tab = dcc.Tab(
