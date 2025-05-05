@@ -1110,7 +1110,7 @@ resultados_subtabs = dcc.Tabs([
                 
                 # Gráfico PCA (imagen cargada desde assets)
                 html.Div([
-                    html.Img(src="assets/PCA.png", alt="Visualización PCA de predicciones", 
+                    html.Img(src="assets/pca.png", alt="Visualización PCA de predicciones", 
                             style={'maxWidth': '100%', 'border': '1px solid #ddd', 'borderRadius': '5px'}),
                     html.Figcaption("Visualización de predicciones en espacio PCA", 
                                 style={'textAlign': 'center', 'fontStyle': 'italic', 'marginTop': '10px'})
