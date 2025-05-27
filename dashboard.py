@@ -26,7 +26,7 @@ from sqlalchemy import create_engine
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 app.title = "Análisis de Salud del Sueño - Dataset"
-server = app.server  # Esta línea es crucial para el despliegue en Render
+server = app.server  
 
 # Asegurar que exista la carpeta de assets
 if not os.path.exists('assets'):
@@ -586,21 +586,19 @@ marco_tab = dcc.Tab(
     children=[
         dbc.Container([
             html.H2(
-    "📚 MARCO TEÓRICO 🧾",
-    className="mt-4 mb-5 text-center",
-    style={
-        'fontWeight': 'bold',
-        'color': '#1e5aa8',
-        'fontSize': '2.5rem',
-        'textShadow': '1px 1px 2px rgba(0,0,0,0.1)',
-        'borderBottom': f'3px solid {colors["primary"]}',
-        'display': 'inline-block',
-        'paddingBottom': '10px'
-    }
-)
-,
+                "📚 MARCO TEÓRICO 🧾",
+                className="mt-4 mb-5 text-center",
+                style={
+                    'fontWeight': 'bold',
+                    'color': '#1e5aa8',
+                    'fontSize': '2.5rem',
+                    'textShadow': '1px 1px 2px rgba(0,0,0,0.1)',
+                    'borderBottom': f'3px solid {colors["primary"]}',
+                    'display': 'inline-block',
+                    'paddingBottom': '10px'
+                }
+            ),
 
-            # Fila de trastornos + factores con imagen a la derecha
             dbc.Row([
                 dbc.Col([
                     html.Div([
@@ -648,15 +646,69 @@ marco_tab = dcc.Tab(
                 ], md=4)
             ], className="mb-5"),
 
-            # Sección final ML
             html.Div([
-                html.H4("Machine learning para predicción", className="mb-3", style={'color': colors['primary'], 'fontWeight': 'bold'}),
-                html.P("Se utilizó el algoritmo Random Forest para identificar patrones que permiten predecir la presencia de trastornos del sueño."),
-                html.P("El modelo fue entrenado con variables como duración y calidad del sueño, nivel de actividad física, estrés, frecuencia cardíaca, entre otras.")
+                html.H4("Aplicación del Aprendizaje Automático en Trastornos del Sueño", className="mb-4", style={'color': colors['primary'], 'fontWeight': 'bold'}),
+                html.P(
+                    "Los trastornos del sueño representan un reto clínico importante en salud pública. Modelos de machine learning como Random Forest han demostrado ser "
+                    "efectivos para identificar patrones complejos entre variables fisiológicas y conductuales, facilitando su diagnóstico temprano. "
+                    "Su capacidad para manejar datos heterogéneos y ofrecer interpretabilidad lo convierten en un aliado ideal para este tipo de análisis predictivo."
+                ),
+                html.P(
+                    "En el presente proyecto se utiliza Random Forest para predecir la clase de trastorno del sueño a partir de datos como edad, duración del sueño, IMC, nivel de estrés, "
+                    "actividad física, frecuencia cardíaca, entre otros. La selección de este modelo se fundamenta no solo en su desempeño empírico, sino también en su validación "
+                    "en la literatura reciente."
+                ),
+                html.H5("📚 Soporte en Literatura Reciente", className="mt-4 mb-3", style={'color': colors['chart1']}),
+                html.P("A continuación se resumen algunos trabajos relevantes que sustentan este enfoque:"),
+                dbc.Row([
+                    dbc.Col([
+                        dbc.Card([
+                            dbc.CardHeader("🔬 Torres et al. (2023)", style={'backgroundColor': colors['primary'], 'color': 'white'}),
+                            dbc.CardBody([
+                                html.P(
+                                    "Desarrollaron una app móvil que implementa un modelo de machine learning para detectar apnea del sueño, "
+                                    "a partir de señales respiratorias y polisomnografía. El modelo se proyecta como herramienta clínica efectiva.",
+                                    className="card-text"
+                                ),
+                                html.A("Ver estudio", href="https://hdl.handle.net/20.500.12442/12851", target="_blank")
+                            ])
+                        ])
+                    ], md=4),
+
+                    dbc.Col([
+                        dbc.Card([
+                            dbc.CardHeader("👶 Pacho Velasco (2022)", style={'backgroundColor': colors['chart3'], 'color': 'white'}),
+                            dbc.CardBody([
+                                html.P(
+                                    "Aplicó Random Forest para detectar spindles del sueño en niños con apnea, logrando un 96.51% de precisión. "
+                                    "El estudio evidenció los retos del desbalance de clases y la importancia del preprocesamiento.",
+                                    className="card-text"
+                                ),
+                                html.A("Ver estudio", href="https://uvadoc.uva.es/bitstream/handle/10324/57405/TFG-G5868.pdf", target="_blank")
+                            ])
+                        ])
+                    ], md=4),
+
+                    dbc.Col([
+                        dbc.Card([
+                            dbc.CardHeader("🧠 Satyam & Chandra (2025)", style={'backgroundColor': colors['chart1'], 'color': 'white'}),
+                            dbc.CardBody([
+                                html.P(
+                                    "Compararon distintos algoritmos de clasificación aplicados a trastornos del sueño. Random Forest destacó "
+                                    "por su precisión y adaptabilidad en conjuntos de datos clínicos multivariados.",
+                                    className="card-text"
+                                ),
+                                html.A("Ver estudio", href="https://www.irjmets.com/uploadedfiles/paper/issue_4_april_2025/74444/final/fin_irjmets1746339611.pdf", target="_blank")
+                            ])
+                        ])
+                    ], md=4)
+                ])
             ], style=card_style)
         ], fluid=True)
     ]
 )
+
+
 
 
 # 6. Metodología con subtabs mejorada con imágenes y contenido extendido
